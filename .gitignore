@@ -1,0 +1,52 @@
+# =========================
+# ENV / SECRETS
+# =========================
+.env
+*.env
+profiles.yml
+airbyte_configs/**/secrets.*
+*.key
+*.pem
+
+# =========================
+# DBT (IMPORTANT)
+# =========================
+data_transformation/target/
+data_transformation/logs/
+data_transformation/dbt_packages/
+data_transformation/.user.yml
+
+# optional local dbt artifacts
+*.log
+partial_parse.msgpack
+manifest.json
+run_results.json
+
+# =========================
+# DAGSTER
+# =========================
+*.db
+*.sqlite
+__pycache__/
+*.pyc
+
+# =========================
+# AIRBYTE
+# =========================
+airbyte_configs/**/credentials.json
+airbyte_configs/**/secrets.json
+
+# =========================
+# OS / IDE
+# =========================
+.DS_Store
+.vscode/
+.idea/
+
+# =========================
+# PYTHON
+# =========================
+__pycache__/
+*.pyc
+.venv/
+venv/

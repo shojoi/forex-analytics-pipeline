@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: dim_currency
+    description: "Currency dimension with SCD Type 2"
+    columns:
+      - name: currency_key
+        description: "Surrogate key"
+        tests:
+          - unique
+          - not_null
+      - name: currency_code
+        tests:
+          - not_null
+
+  - name: dim_date
+    description: "Date dimension"
+    columns:
+      - name: date_key
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_currency_pair
+    description: "Currency pair dimension"
+    columns:
+      - name: pair_key
+        tests:
+          - unique
+          - not_null
+
+  - name: fact_exchange_rates
+    description: "Exchange rate fact table"
+    columns:
+      - name: rate_key
+        tests:
+          - unique
+          - not_null
+      - name: exchange_rate
+        tests:
+          - not_null

@@ -1,0 +1,39 @@
+version: 2
+
+sources:
+  - name: raw
+    database: forex_db
+    schema: raw
+    tables:
+      - name: currencies
+      - name: historical_rates
+      - name: rates
+      - name: timeseries
+
+models:
+  - name: stg_rates_flattened
+    description: "Flattened and deduplicated exchange rates from all sources"
+    columns:
+      - name: base_currency
+        description: "Source currency code"
+        tests:
+          - not_null
+      - name: target_currency
+        description: "Target currency code"
+        tests:
+          - not_null
+      - name: exchange_rate
+        description: "Conversion rate"
+        tests:
+          - not_null
+      - name: rate_timestamp
+        tests:
+          - not_null
+
+  - name: stg_currencies
+    description: "Cleaned currency master data"
+    columns:
+      - name: currency_code
+        tests:
+          - unique
+          - not_null

@@ -1,4 +1,4 @@
-warehouse:
+forex_pipeline:
   target: dev
   outputs:
     dev:
