@@ -1,0 +1,22 @@
+# Core Dagster & UI
+dagster==1.13.3
+dagster-webserver==1.13.3
+dagster-cloud==1.13.3
+
+# Integrations (Version matched to 0.23.x)
+dagster-airbyte==0.29.3
+dagster-dbt==0.29.3
+dagster-snowflake==0.29.3
+dagster-aws==0.29.3
+
+# dbt & Database
+dbt-core==1.9.1
+dbt-snowflake==1.9.1
+sqlalchemy
+pg8000
+
+# Utilities & Data
+requests
+pandas
+loguru
+boto3
