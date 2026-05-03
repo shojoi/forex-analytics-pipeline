@@ -14,7 +14,7 @@ airbyte_configs/**/secrets.*
 # =========================
 data_transformation/target/
 data_transformation/logs/
-data_transformation/dbt_packages/
+# data_transformation/dbt_packages/  # COMMENT OUT - need to commit for serverless
 data_transformation/.user.yml
 
 # optional local dbt artifacts
