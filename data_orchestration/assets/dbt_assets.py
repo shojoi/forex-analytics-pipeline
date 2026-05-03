@@ -41,7 +41,7 @@ def forex_dbt_assets(context: AssetExecutionContext, dbt_warehouse_resource: Dbt
     """
     
     # Ensure deps are installed
-    yield from dbt_warehouse_resource.cli(["deps"], context=context).stream()
+    #yield from dbt_warehouse_resource.cli(["deps"], context=context).stream()
     
     # Then run dbt with full refresh
     yield from dbt_warehouse_resource.cli(
