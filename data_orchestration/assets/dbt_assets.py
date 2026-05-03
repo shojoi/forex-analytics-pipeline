@@ -32,7 +32,9 @@ if not dbt_manifest_path.exists():
 
 @dbt_assets(
     manifest=dbt_manifest_path,
-    dagster_dbt_translator=CustomDagsterDbtTranslator()
+    dagster_dbt_translator=CustomDagsterDbtTranslator(),
+    use_build_command=True,   # prevents Dagster from running dbt deps
+    defer_deps=True           # prevents Dagster from running dbt deps
 )
 def forex_dbt_assets(context: AssetExecutionContext, dbt_warehouse_resource: DbtCliResource):
     """
