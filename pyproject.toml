@@ -33,7 +33,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.dagster]
 module_name = "data_orchestration.definitions"
-code_location_name = "forex_analyticsanalytics"
+code_location_name = "forex_analytics"
 
 [tool.setuptools.packages.find]
 exclude=[""]

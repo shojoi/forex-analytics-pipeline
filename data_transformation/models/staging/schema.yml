@@ -12,7 +12,7 @@ sources:
 
 models:
   - name: stg_rates_flattened
-    description: "Flattened and deduplicated exchange rates from all sources"
+    description: "Flattened exchange rates from historical and latest API endpoints (excludes timeseries)"
     columns:
       - name: base_currency
         description: "Source currency code"
@@ -30,6 +30,58 @@ models:
         tests:
           - not_null
 
+  - name: stg_timeseries_rates_flattened
+    description: "Flattened exchange rates from timeseries API endpoint"
+    columns:
+      - name: base_currency
+        description: "Source currency code (always USD for timeseries)"
+        tests:
+          - not_null
+      - name: target_currency
+        description: "Target currency code"
+        tests:
+          - not_null
+      - name: exchange_rate
+        description: "Conversion rate"
+        tests:
+          - not_null
+      - name: rate_timestamp
+        description: "Timestamp of the rate"
+        tests:
+          - not_null
+      - name: rate_date
+        description: "Date of the rate"
+        tests:
+          - not_null
+      - name: source_system
+        description: "Source system identifier (timeseries)"
+
+  - name: stg_rates_all_sources
+    description: "Unified view combining all exchange rate sources (latest, historical, timeseries) with deduplication"
+    columns:
+      - name: base_currency
+        description: "Source currency code"
+        tests:
+          - not_null
+      - name: target_currency
+        description: "Target currency code"
+        tests:
+          - not_null
+      - name: exchange_rate
+        description: "Conversion rate"
+        tests:
+          - not_null
+      - name: rate_date
+        description: "Date of the rate"
+        tests:
+          - not_null
+      - name: source_system
+        description: "Source system (latest, historical, or timeseries)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['latest', 'historical', 'timeseries']
+
   - name: stg_currencies
     description: "Cleaned currency master data"
     columns:
@@ -37,3 +89,23 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: stg_timeseries_rates_flattened
+    description: "Flattened timeseries exchange rates with each date as a separate record"
+    columns:
+      - name: date
+        description: "Date of the exchange rate"
+        tests:
+          - not_null
+      - name: currency_code
+        description: "Currency code"
+        tests:
+          - not_null
+      - name: exchange_rate
+        description: "Exchange rate value"
+        tests:
+          - not_null
+      - name: extracted_at
+        description: "Timestamp when data was extracted from source"
+      - name: transformed_at
+        description: "Timestamp when data was transformed by dbt"
