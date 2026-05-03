@@ -1,7 +1,4 @@
 locations:
-  - location_name: forex-analytics
-    code_source:
-      python_file: data_orchestration/definitions.py
-    build:
-      directory: .
-      registry: ""
+- code_source:
+    module_name: data_orchestration.definitions
+  location_name: forex_analytics
