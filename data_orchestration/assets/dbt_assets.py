@@ -15,7 +15,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent.resolve()
 DBT_PROJECT_DIR = PROJECT_ROOT / "data_transformation"
 
 # Configure dbt project resource (dbt_project.yml file path)
-dbt_warehouse_resource = DbtCliResource(project_dir=os.fspath(DBT_PROJECT_DIR))
+dbt_warehouse_resource = DbtCliResource(project_dir=os.fspath(DBT_PROJECT_DIR), global_flags=["--no-deps"])
 
 # Generate dbt manifest, and get the manifest path
 dbt_manifest_path = dbt_warehouse_resource.cli(
@@ -32,9 +32,7 @@ if not dbt_manifest_path.exists():
 
 @dbt_assets(
     manifest=dbt_manifest_path,
-    dagster_dbt_translator=CustomDagsterDbtTranslator(),
-    use_build_command=True,   # prevents Dagster from running dbt deps
-    defer_deps=True           # prevents Dagster from running dbt deps
+    dagster_dbt_translator=CustomDagsterDbtTranslator()
 )
 def forex_dbt_assets(context: AssetExecutionContext, dbt_warehouse_resource: DbtCliResource):
     """
