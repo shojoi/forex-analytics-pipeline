@@ -18,15 +18,6 @@ WITH combined AS (
         RESPONSE:base::string AS base_currency,
         RESPONSE:date::timestamp AS rate_timestamp,
         RESPONSE:rates AS rates,
-        'timeseries' AS source_system
-    FROM {{ source('raw', 'timeseries') }}
-
-    UNION ALL
-
-    SELECT
-        RESPONSE:base::string AS base_currency,
-        RESPONSE:date::timestamp AS rate_timestamp,
-        RESPONSE:rates AS rates,
         'latest' AS source_system
     FROM {{ source('raw', 'rates') }}
 

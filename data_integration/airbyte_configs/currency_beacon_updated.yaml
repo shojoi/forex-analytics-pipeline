@@ -1,0 +1,215 @@
+version: 7.17.1
+
+type: DeclarativeSource
+
+check:
+  type: CheckStream
+  stream_names:
+    - timeseries
+
+definitions:
+  linked:
+    HttpRequester:
+      authenticator:
+        type: ApiKeyAuthenticator
+        api_token: "{{ config['api_key'] }}"
+        inject_into:
+          type: RequestOption
+          field_name: api_key
+          inject_into: request_parameter
+    DeclarativeStream: {}
+
+streams:
+  - type: DeclarativeStream
+    name: Rates
+    retriever:
+      type: SimpleRetriever
+      requester:
+        type: HttpRequester
+        url: https://api.currencybeacon.com/v1/latest
+        http_method: GET
+        authenticator:
+          $ref: "#/definitions/linked/HttpRequester/authenticator"
+        request_parameters:
+          base: "{{ config['base'] }}"
+      record_selector:
+        type: RecordSelector
+        extractor:
+          type: DpathExtractor
+          field_path: []
+    schema_loader:
+      type: InlineSchemaLoader
+      schema:
+        type: object
+        $schema: http://json-schema.org/schema#
+        additionalProperties: true
+  - type: DeclarativeStream
+    name: currencies
+    retriever:
+      type: SimpleRetriever
+      requester:
+        type: HttpRequester
+        url: https://api.currencybeacon.com/v1/currencies
+        http_method: GET
+        authenticator:
+          $ref: "#/definitions/linked/HttpRequester/authenticator"
+      record_selector:
+        type: RecordSelector
+        extractor:
+          type: DpathExtractor
+          field_path:
+            - response
+    schema_loader:
+      type: InlineSchemaLoader
+      schema:
+        type: object
+        $schema: http://json-schema.org/schema#
+        additionalProperties: true
+  - type: DeclarativeStream
+    name: Historical_rates
+    retriever:
+      type: SimpleRetriever
+      requester:
+        type: HttpRequester
+        url: https://api.currencybeacon.com/v1/historical
+        http_method: GET
+        authenticator:
+          $ref: "#/definitions/linked/HttpRequester/authenticator"
+        request_parameters:
+          base: "{{ config['base'] }}"
+          date: "{{ config['start_date'] }}"
+      record_selector:
+        type: RecordSelector
+        extractor:
+          type: DpathExtractor
+          field_path: []
+    schema_loader:
+      type: InlineSchemaLoader
+      schema:
+        type: object
+        $schema: http://json-schema.org/schema#
+        additionalProperties: true
+  - type: DeclarativeStream
+    name: timeseries
+    retriever:
+      type: SimpleRetriever
+      requester:
+        type: HttpRequester
+        url: https://api.currencybeacon.com/v1/timeseries
+        http_method: GET
+        authenticator:
+          $ref: "#/definitions/linked/HttpRequester/authenticator"
+        request_parameters:
+          base: "{{ config['base'] }}"
+          end_date: "{{ config['end_date'] }}"
+          start_date: "{{ config['start_date'] }}"
+      record_selector:
+        type: RecordSelector
+        extractor:
+          type: DpathExtractor
+          field_path: []
+    schema_loader:
+      type: InlineSchemaLoader
+      schema:
+        type: object
+        $schema: http://json-schema.org/schema#
+        properties:
+          meta:
+            type:
+              - object
+              - "null"
+            properties:
+              code:
+                type:
+                  - number
+                  - "null"
+              disclaimer:
+                type:
+                  - string
+                  - "null"
+          response:
+            type:
+              - object
+              - "null"
+            additionalProperties:
+              type: object
+              additionalProperties:
+                type:
+                  - number
+                  - "null"
+
+spec:
+  type: Spec
+  documentation_url: https://currencybeacon.com/api-documentation
+  connection_specification:
+    type: object
+    title: Currency Beacon Spec
+    $schema: http://json-schema.org/draft-07/schema#
+    required:
+      - api_key
+    properties:
+      base:
+        type: string
+        description: Base currency code (e.g., USD)
+        order: 1
+        title: Base Currency
+        default: USD
+      api_key:
+        type: string
+        description: Your Currency Beacon API Key
+        order: 0
+        title: API Key
+        airbyte_secret: true
+      end_date:
+        type: string
+        description: End date for time series (YYYY-MM-DD)
+        order: 3
+        title: End Date
+        pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+        examples:
+          - "2026-04-30"
+      start_date:
+        type: string
+        description: Start date for time series (YYYY-MM-DD)
+        order: 2
+        title: Start Date
+        pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+        examples:
+          - "2026-04-01"
+    additionalProperties: true
+
+metadata:
+  testedStreams:
+    Rates:
+      isStale: false
+      hasRecords: true
+      streamHash: 4440781c553572657d8b6bed480307742cb81998
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+    currencies:
+      isStale: false
+      hasRecords: true
+      streamHash: 4edb007e4f1ce29b3c72ba3ad30b6ba5f2cc6baf
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+    timeseries:
+      isStale: false
+      hasRecords: true
+      streamHash: d6bf774ac3cea067d9c2fe2cac52e755947693cc
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+    Historical_rates:
+      isStale: false
+      hasRecords: true
+      streamHash: 39923f0de3158b208acd987306c7a7d105c3817e
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+  autoImportSchema: {}

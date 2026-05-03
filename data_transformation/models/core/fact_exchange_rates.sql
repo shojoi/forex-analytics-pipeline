@@ -6,7 +6,7 @@
 ) }}
 
 WITH staging_rates AS (
-    SELECT * FROM {{ ref('stg_rates_flattened') }}
+    SELECT * FROM {{ ref('stg_rates_all_sources') }}
     {% if is_incremental() %}
     WHERE rate_timestamp > (SELECT MAX(rate_timestamp) FROM {{ this }})
     {% endif %}

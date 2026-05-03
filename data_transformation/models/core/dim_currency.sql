@@ -18,20 +18,17 @@ enriched AS (
             WHEN currency_code IN ('JPY', 'CNY', 'INR', 'AUD', 'NZD') THEN 'Asia-Pacific'
             ELSE 'Other'
         END AS region,
-        TRUE AS is_active,
-        CURRENT_DATE() AS effective_from,
-        NULL AS effective_to,
-        TRUE AS is_current
+        TRUE AS is_active
     FROM source
 )
 
 SELECT 
-    {{ dbt_utils.generate_surrogate_key(['currency_code', 'effective_from']) }} AS currency_key,
+    {{ dbt_utils.generate_surrogate_key(['currency_code']) }} AS currency_key,
     currency_code,
     currency_name,
     region,
     is_active,
-    effective_from,
-    effective_to,
-    is_current
+    '2020-01-01'::DATE AS effective_from,
+    NULL AS effective_to,
+    TRUE AS is_current
 FROM enriched

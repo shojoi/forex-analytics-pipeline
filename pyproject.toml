@@ -1,0 +1,39 @@
+[project]
+name = "forex_analytics"
+version = "0.1.0"
+description = "Forex Analytics Batch ETL Pipeline"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "dagster==1.13.3",
+    "dagster-webserver==1.13.3",
+    "dagster-cloud==1.13.3",
+    "dagster-airbyte==0.29.3",   # Modern version that exists
+    "dagster-dbt==0.29.3",       # Modern version that exists
+    "dagster-snowflake==0.29.3", # Modern version that exists
+    "dagster-aws==0.29.3",       # Modern version that exists
+    "dbt-core==1.9.1",
+    "dbt-snowflake==1.9.1",
+    "requests",
+    "pandas",
+    "sqlalchemy",
+    "pg8000",
+    "loguru",
+    "boto3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.dagster]
+module_name = "data_orchestration.definitions"
+code_location_name = "forex_analytics"
+
+[tool.setuptools.packages.find]
+exclude=[""]
