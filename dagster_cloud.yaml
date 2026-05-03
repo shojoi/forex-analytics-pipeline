@@ -1,0 +1,4 @@
+locations:
+- code_source:
+    module_name: data_orchestration.definitions
+  location_name: forex_analytics
