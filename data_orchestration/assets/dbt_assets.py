@@ -34,6 +34,6 @@ def forex_dbt_assets(context: AssetExecutionContext, dbt_warehouse_resource: Dbt
     Packages are committed, so deps validates quickly.
     """
     yield from dbt_warehouse_resource.cli(
-        ["build", "--full-refresh"], 
+        ["build"], 
         context=context
     ).stream()
